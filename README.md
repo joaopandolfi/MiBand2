@@ -1,6 +1,6 @@
 Welcome to the MiBand2 wiki!
 
-Esta App hace detención de Botón y envío de números a la mi Band 2.
+Esta App hace una detención del Botón y envío de números a la mi Band 2.
 
 Gracias a:
 https://github.com/lwis/miband-notifier/
