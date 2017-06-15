@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">MiBand2</string>
-    <string name="button">Enviar Cronómetro</string>
+    <string name="btnCro">Enviar Cronómetro</string>
     <string name="botonEnviar">Enviar Pulsación</string>
     <string name="checkBox">Enviar Texto</string>
     <string name="btnMens">Enviar Mensaje</string>
     <string name="btnLlamar">Llamar</string>
     <string name="btnVibrar">Vibrar</string>
     <string name="btnCorazon">Enviar Icono</string>
+    <string name="btnDescon">Desconectar MiBand</string>
+    <string name="btnBoton">Activar botón MiBand</string>
+    <string name="btnConectar">Conectar con MiBand</string>
 
 
 </resources>

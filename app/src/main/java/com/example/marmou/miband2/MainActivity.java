@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     public EditText texto;
     public CheckBox check;
     public String value;
+    public static String MAC;
 
     Handler handler = new Handler(Looper.getMainLooper());
     BLEMiBand2Helper helper = null;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         number = (EditText) findViewById(R.id.editNumber);
         texto = (EditText) findViewById(R.id.editText);
         check = (CheckBox) findViewById(R.id.checkBox);
+        EditText mac=(EditText) findViewById(R.id.txMac);
+        MAC=mac.getText().toString();
 
         helper = new BLEMiBand2Helper(MainActivity.this, handler);
         helper.addListener(this);
@@ -62,11 +65,16 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         super.onDestroy();
     }
 
-    // Like network card, connect to all devices in Bluetooth (like PC in Netowrk)
-    final BluetoothAdapter myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
 
     public void btnRun(View view) {
+        EditText mac=(EditText) findViewById(R.id.txMac);
+        MAC=mac.getText().toString();
         helper.connect();
+
+    }
+    public void btnDescon(View view){
+        helper.DisconnectGatt();
     }
 
 
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         helper.getNotifications(
                 Consts.UUID_SERVICE_MIBAND_SERVICE,
                 Consts.UUID_BUTTON_TOUCH);
-        Toast.makeText(MainActivity.this, "getTouchNotifications!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Botón activado", Toast.LENGTH_SHORT).show();
     }
 
     public void btnTest(View view) throws InterruptedException {

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="btnRun"
-        android:text="Conectar por Bluetooth" />
+        android:text="@string/btnConectar" />
 
     <Button
         android:id="@+id/btnTest"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btnRun"
         android:onClick="btnTest"
-        android:text="Escuchar notificaciones de MiBand" />
+        android:text="@string/btnBoton" />
 
     <Button
         android:id="@+id/buttonEn"
@@ -71,7 +71,7 @@
         android:layout_below="@+id/btnTest"
         android:layout_toEndOf="@+id/checkBox"
         android:onClick="btnEnvCro"
-        android:text="@string/button" />
+        android:text="@string/btnCro" />
 
     <Button
         android:id="@+id/btnIcnMens"
@@ -112,5 +112,36 @@
         android:layout_below="@+id/btnLlamar"
         android:text="@string/btnCorazon"
         android:onClick="iconCor" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="MAC: "
+        android:textAlignment="center"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/txMac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/textView"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="D4:4E:7D:8E:26:28" />
+
+    <Button
+        android:id="@+id/btnDescon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txMac"
+        android:layout_alignEnd="@+id/txMac"
+        android:layout_alignParentStart="true"
+        android:onClick="btnDescon"
+        android:text="@string/btnDescon" />
 
 </RelativeLayout>

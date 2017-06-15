@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
+import android.widget.EditText;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -56,7 +57,8 @@ public class BLEMiBand2Helper {
 
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         try {
-            activeDevice = mBluetoothAdapter.getRemoteDevice("D4:4E:7D:8E:26:28");
+            //"D4:4E:7D:8E:26:28"
+            activeDevice = mBluetoothAdapter.getRemoteDevice(MainActivity.MAC);
         } catch (Exception e) {
             activeDevice = null;
             e.printStackTrace();
@@ -326,8 +328,7 @@ public class BLEMiBand2Helper {
         if (myGatService != null) {
             Log.d(TAG, "* Getting gatt Characteristic. UUID: " + Characteristics.toString());
 
-            BluetoothGattCharacteristic myGatChar
-                    = myGatService.getCharacteristic(Characteristics/*Consts.UUID_BUTTON_TOUCH*/);
+            BluetoothGattCharacteristic myGatChar= myGatService.getCharacteristic(Characteristics/*Consts.UUID_BUTTON_TOUCH*/);
             if (myGatChar != null) {
                 Log.d(TAG, "* Statring listening");
 
