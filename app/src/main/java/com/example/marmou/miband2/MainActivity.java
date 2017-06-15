@@ -18,6 +18,11 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     public static final String LOG_TAG = "Mario";
 
+    public EditText number;
+    public EditText texto;
+    public CheckBox check;
+    public String value;
+
     Handler handler = new Handler(Looper.getMainLooper());
     BLEMiBand2Helper helper = null;
 
@@ -28,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        number = (EditText) findViewById(R.id.editNumber);
+        texto = (EditText) findViewById(R.id.editText);
+        check = (CheckBox) findViewById(R.id.checkBox);
 
         helper = new BLEMiBand2Helper(MainActivity.this, handler);
         helper.addListener(this);
@@ -77,16 +85,51 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         getTouchNotifications();
     }
     public void btnEnviar(View view)  throws InterruptedException{
-        EditText number = (EditText) findViewById(R.id.editNumber);
-        EditText texto = (EditText) findViewById(R.id.editText);
-        CheckBox check = (CheckBox) findViewById(R.id.checkBox);
-        String value;
+
+
         if(check.isChecked()){
             value=texto.getText().toString();
         }else{
             value = number.getText().toString();
         }
-        helper.sendData(value);
+        helper.sendData(value, (byte) 2, Consts.cronoYHearBeat);
+    }
+    public void btnEnvCro(View view)  throws InterruptedException{
+
+
+        if(check.isChecked()){
+            value=texto.getText().toString();
+        }else{
+            value = number.getText().toString();
+        }
+        helper.sendData(value, (byte) 1, Consts.cronoYHearBeat);
+    }
+    public void btnIcnMens(View view) throws InterruptedException{
+
+
+        if(check.isChecked()){
+            value=texto.getText().toString();
+        }else{
+            value = number.getText().toString();
+        }
+        helper.sendData(value, (byte) 1, Consts.mensaje);
+
+    }
+    public void btnLlamar(View view) throws InterruptedException{
+
+
+        if(check.isChecked()){
+            value=texto.getText().toString();
+        }else{
+            value = number.getText().toString();
+        }
+        helper.sendData(value, (byte) 1, Consts.llamada);
+    }
+    public void vibrar(View view) throws InterruptedException{
+                helper.sendActions(Consts.vibrar);
+    }
+    public void iconCor(View view) throws InterruptedException{
+                helper.sendActions(Consts.icon);
     }
 
 

@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -32,31 +33,31 @@ public class BLEMiBand2Helper {
     private BluetoothGattCharacteristic characteristic;
 
 
-    private  BLEMiBand2Helper() {}
+    private BLEMiBand2Helper() {
+    }
 
     public BLEMiBand2Helper(Context context, android.os.Handler handler) {
         myContext = context;
         myHandler = handler;
     }
 
-    public  boolean isConnected() {
-        return  isConnectedToGatt;
+    public boolean isConnected() {
+        return isConnectedToGatt;
     }
 
     /* =========  Handling Initializing  ============== */
 
 
-
-    public void connect(){
-        if(!BluetoothAdapter.getDefaultAdapter().isEnabled()){
+    public void connect() {
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             return;
         }
-        isConnectedToGatt=false;
+        isConnectedToGatt = false;
 
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        try{
-            activeDevice=mBluetoothAdapter.getRemoteDevice("D4:4E:7D:8E:26:28");
-        }catch (Exception e){
+        try {
+            activeDevice = mBluetoothAdapter.getRemoteDevice("D4:4E:7D:8E:26:28");
+        } catch (Exception e) {
             activeDevice = null;
             e.printStackTrace();
         }
@@ -82,14 +83,11 @@ public class BLEMiBand2Helper {
     }
 
 
-
-    public  void  DisconnectGatt()  {
-        if(myGatBand != null && isConnectedToGatt)
-        {
-            myHandler.post(new Runnable()
-            {
-                @Override public void run()
-                {
+    public void DisconnectGatt() {
+        if (myGatBand != null && isConnectedToGatt) {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
                     myGatBand.disconnect();
                     myGatBand.close();
                     myGatBand = null;
@@ -99,24 +97,20 @@ public class BLEMiBand2Helper {
         }
     }
 
-    private BluetoothGattCallback myGattCallback = new BluetoothGattCallback()
-    {
+    private BluetoothGattCallback myGattCallback = new BluetoothGattCallback() {
         @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status)
-        {
-            if(status == BluetoothGatt.GATT_SUCCESS)
-            {
-                characteristic=gatt.getService(Consts.UUID_SERVICE_1802).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A06);
-                isConnectedToGatt=true;
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                characteristic = gatt.getService(Consts.UUID_SERVICE_1802).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A06);
+
+                isConnectedToGatt = true;
             }
             Log.d(TAG, "Service discovered with status " + status);
         }
 
         @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
-        {
-            switch(newState)
-            {
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
                     Log.d(TAG, "Gatt state: connected");
                     gatt.discoverServices();
@@ -132,11 +126,10 @@ public class BLEMiBand2Helper {
         }
 
         @Override
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
-        {
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             Log.d(TAG, "Write successful: " + Arrays.toString(characteristic.getValue()));
-            raiseonWrite(gatt,characteristic,status);
-            super.onCharacteristicWrite(gatt,characteristic,status);
+            raiseonWrite(gatt, characteristic, status);
+            super.onCharacteristicWrite(gatt, characteristic, status);
 
 
         }
@@ -144,44 +137,88 @@ public class BLEMiBand2Helper {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             Log.d(TAG, "Read successful: " + Arrays.toString(characteristic.getValue()));
-            raiseonRead(gatt,characteristic,status);
+            raiseonRead(gatt, characteristic, status);
             super.onCharacteristicRead(gatt, characteristic, status);
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.d(TAG, " - Notifiaction UUID: " +  characteristic.getUuid().toString());
-            Log.d(TAG, " - Notifiaction value: " +  Arrays.toString(characteristic.getValue()));
+            Log.d(TAG, " - Notifiaction UUID: " + characteristic.getUuid().toString());
+            Log.d(TAG, " - Notifiaction value: " + Arrays.toString(characteristic.getValue()));
             raiseonNotification(gatt, characteristic);
             super.onCharacteristicChanged(gatt, characteristic);
         }
 
 
     };
-
-    public void sendData(String value){
-        if(!isConnectedToGatt){
+    /*
+        Método que envia vibración y icono de mensaje con corazon en el medio
+     */
+    public void sendActions(Byte action){
+        if (!isConnectedToGatt){
             connect();
         }
         try {
+             characteristic.setValue(new byte[]{action,1});//vibrar o icono mensaje con corazon
+
+            myGatBand.writeCharacteristic(characteristic);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    /*
+        Método para enviar datos tanto numeros como maximo una letra, pero la lectura siempre es en forma de números
+    */
+    public void sendData(String value, Byte func, Byte action) {
+        if (!isConnectedToGatt) {
+            connect();
+        }
+        try {
+                if(isNumeric(value)==true){
+
+                    int mens=Integer.parseInt(value);
+
+                            /*Forma original*/
+                            characteristic.setValue(new byte[]{action, func, (byte) (mens & 0xFF), (byte) ((mens >> 8) & 0xFF)});
 
 
-            byte mens=Byte.valueOf(value);
-            characteristic.setValue(new byte[]{-3, 2,mens, (byte) 0});
+                }else{
+
+                    byte[] actions={action,func};
+                    byte[] mens =value.getBytes(Charset.forName("UTF-8"));
+                    byte[] cero={0};
+                    byte[] union=new byte[actions.length+mens.length+cero.length];
+
+                    //copy actions into start of union
+                    System.arraycopy(actions,0,union,0,actions.length);
+                    System.arraycopy(mens,0,union,actions.length,mens.length);
+                    //copy cero into end of union
+                    System.arraycopy(cero,0,union,mens.length+actions.length,cero.length);
+
+                    characteristic.setValue(union);
+                }
             myGatBand.writeCharacteristic(characteristic);
 
+            /* characteristic.setValue(new byte[]{-3,func, mens, 0 });
+            characteristic.setValue(value.getBytes(Charset.defaultCharset().forName("Utf-8"))); Esto envia pero no muestra nada en la pulsera
+           Esto envia bytes tanto con numeros o letras pero la pulsera no muestra nada.
+            writeData(Consts.UUID_SERVICE_MIBAND_SERVICE,Consts.UUID_CHARACTERISTIC_2A06,value.getBytes(Charset.defaultCharset().forName("Utf-8")));*/
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public interface BLEAction {
         void onDisconnect();
+
         void onConnect();
+
         void onRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status);
+
         void onWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status);
+
         void onNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic);
     }
 
@@ -200,19 +237,19 @@ public class BLEMiBand2Helper {
     public void raiseonNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         // Notify everybody that may be interested.
         for (BLEAction listener : listeners)
-            listener.onNotification( gatt,characteristic);
+            listener.onNotification(gatt, characteristic);
     }
 
-    public void raiseonRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,int status) {
+    public void raiseonRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         // Notify everybody that may be interested.
         for (BLEAction listener : listeners)
-            listener.onRead( gatt,characteristic,status);
+            listener.onRead(gatt, characteristic, status);
     }
 
-    public void raiseonWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,int status) {
+    public void raiseonWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         // Notify everybody that may be interested.
         for (BLEAction listener : listeners)
-            listener.onWrite( gatt,characteristic,status);
+            listener.onWrite(gatt, characteristic, status);
     }
 
     public void raiseonDisconnect() {
@@ -247,13 +284,13 @@ public class BLEMiBand2Helper {
             if (myGatChar != null) {
                 Log.d(TAG, "* Reading data");
 
-                boolean status =  myGatBand.readCharacteristic(myGatChar);
+                boolean status = myGatBand.readCharacteristic(myGatChar);
                 Log.d(TAG, "* Read status :" + status);
             }
         }
     }
 
-    public void writeData(UUID service, UUID Characteristics,byte[] data) {
+    public void writeData(UUID service, UUID Characteristics, byte[] data) {
         if (!isConnectedToGatt || myGatBand == null) {
             Log.d(TAG, "Cant read from BLE, not initialized.");
             return;
@@ -271,7 +308,7 @@ public class BLEMiBand2Helper {
                 Log.d(TAG, "* Writing trigger");
                 myGatChar.setValue(data /*Consts.BYTE_NEW_HEART_RATE_SCAN*/);
 
-                boolean status =  myGatBand.writeCharacteristic(myGatChar);
+                boolean status = myGatBand.writeCharacteristic(myGatChar);
                 Log.d(TAG, "* Writting trigger status :" + status);
             }
         }
@@ -295,7 +332,7 @@ public class BLEMiBand2Helper {
                 Log.d(TAG, "* Statring listening");
 
                 // second parametes is for starting\stopping the listener.
-                boolean status =  myGatBand.setCharacteristicNotification(myGatChar, true);
+                boolean status = myGatBand.setCharacteristicNotification(myGatChar, true);
                 Log.d(TAG, "* Set notification status :" + status);
             }
         }
@@ -303,7 +340,8 @@ public class BLEMiBand2Helper {
 
     /**
      * Get notification but also set descriptor to Enable notification. You need to wait couple of
-     *      seconds before you could use it (at least in the mi band 2)
+     * seconds before you could use it (at least in the mi band 2)
+     *
      * @param service
      * @param Characteristics
      */
@@ -337,6 +375,15 @@ public class BLEMiBand2Helper {
                     Log.d(TAG, "Writing decriptors result: " + status);
                 }
             }
+        }
+    }
+
+    private static boolean isNumeric(String cadena){
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
         }
     }
 
