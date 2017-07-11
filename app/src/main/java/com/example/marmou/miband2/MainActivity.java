@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.BLEAction{
@@ -133,8 +134,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         }
         helper.sendData(value, (byte) 1, Consts.llamada);
     }
-    public void vibrar(View view) throws InterruptedException{
-                helper.sendActions(Consts.vibrar);
+    public void vibrar(View view) throws InterruptedException, IOException {
+
+         helper.sendActions(Consts.vibrar);
     }
     public void iconCor(View view) throws InterruptedException{
                 helper.sendActions(Consts.icon);

@@ -9,10 +9,15 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.EditText;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -103,7 +108,8 @@ public class BLEMiBand2Helper {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                characteristic = gatt.getService(Consts.UUID_SERVICE_1802).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A06);
+                //Servicio y caracteristica necessaria para el enviio de texto
+                characteristic = gatt.getService(Consts.UUID_SERVICE_1811).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A46);
 
                 isConnectedToGatt = true;
             }
@@ -145,8 +151,8 @@ public class BLEMiBand2Helper {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.d(TAG, " - Notifiaction UUID: " + characteristic.getUuid().toString());
-            Log.d(TAG, " - Notifiaction value: " + Arrays.toString(characteristic.getValue()));
+            Log.d(TAG, " - Notification UUID: " + characteristic.getUuid().toString());
+            Log.d(TAG, " - Notification value: " + Arrays.toString(characteristic.getValue()));
             raiseonNotification(gatt, characteristic);
             super.onCharacteristicChanged(gatt, characteristic);
         }
@@ -176,11 +182,11 @@ public class BLEMiBand2Helper {
             connect();
         }
         try {
-                if(isNumeric(value)==true){
+              /*  if(isNumeric(value)==true){
 
                     int mens=Integer.parseInt(value);
 
-                            /*Forma original*/
+                            /*Forma original--******
                             characteristic.setValue(new byte[]{action, func, (byte) (mens & 0xFF), (byte) ((mens >> 8) & 0xFF)});
 
 
@@ -198,13 +204,18 @@ public class BLEMiBand2Helper {
                     System.arraycopy(cero,0,union,mens.length+actions.length,cero.length);
 
                     characteristic.setValue(union);
-                }
+                }*/
+
+            characteristic.setValue(new byte[]{5,1,84,101,115,116});
             myGatBand.writeCharacteristic(characteristic);
+            myGatBand.setCharacteristicNotification(characteristic,true);
 
             /* characteristic.setValue(new byte[]{-3,func, mens, 0 });
             characteristic.setValue(value.getBytes(Charset.defaultCharset().forName("Utf-8"))); Esto envia pero no muestra nada en la pulsera
            Esto envia bytes tanto con numeros o letras pero la pulsera no muestra nada.
             writeData(Consts.UUID_SERVICE_MIBAND_SERVICE,Consts.UUID_CHARACTERISTIC_2A06,value.getBytes(Charset.defaultCharset().forName("Utf-8")));*/
+
+
 
 
         } catch (Exception e) {
@@ -387,6 +398,19 @@ public class BLEMiBand2Helper {
             return false;
         }
     }
+
+    public static byte fromUint8(int value) {
+        return (byte) (value & 0xff);
+
+    }
+
+    public static byte[] toUtf8s(String message) {
+        return message.getBytes(StandardCharsets.UTF_8);
+    }
+
+
+
+
 
 }
 

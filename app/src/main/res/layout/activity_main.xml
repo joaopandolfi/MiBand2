@@ -132,7 +132,7 @@
         android:layout_toEndOf="@+id/textView"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="D4:4E:7D:8E:26:28" />
+        android:text="E4:15:E7:02:7F:12" />
 
     <Button
         android:id="@+id/btnDescon"

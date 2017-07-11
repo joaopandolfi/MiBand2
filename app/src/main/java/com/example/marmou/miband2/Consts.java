@@ -1,5 +1,7 @@
 package com.example.marmou.miband2;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+
 import java.util.UUID;
 
 /**
@@ -11,10 +13,14 @@ public class Consts {//this is common for all BTLE devices. see http://stackover
 
     public static final UUID UUID_SERVICE_GENERIC = UUID.fromString(String.format(BASE_UUID, "1800"));
     public static final UUID UUID_SERVICE_1802 = UUID.fromString(String.format(BASE_UUID, "1802"));
+    public static final UUID UUID_SERVICE_1811 = UUID.fromString(String.format(BASE_UUID, "1811"));
     public static final UUID UUID_SERVICE_MIBAND_SERVICE = UUID.fromString(String.format(BASE_UUID, "FEE0"));
     public static final UUID UUID_SERVICE_MIBAND2_SERVICE = UUID.fromString(String.format(BASE_UUID, "FEE1"));
     public static final UUID UUID_SERVICE_HEARTBEAT = UUID.fromString(String.format(BASE_UUID, "180D"));
     public static final UUID UUID_CHARACTERISTIC_2A06 = UUID.fromString(String.format(BASE_UUID, "2A06"));//caracteristica nivel de alerta
+    public static final UUID UUID_CHARACTERISTIC_2A46 = UUID.fromString(String.format(BASE_UUID, "2A46"));
+
+    public static final UUID UUID_DESCRIPTOR_GATT_CLIENT_CHARACTERISTIC_CONFIGURATION = UUID.fromString(String.format(BASE_UUID, "2902"));
     // General service
     public static final UUID UUID_CHARACTERISTIC_DEVICE_NAME = UUID.fromString(String.format(BASE_UUID, "2A00"));
 
