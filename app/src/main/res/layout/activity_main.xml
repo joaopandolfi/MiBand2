@@ -31,87 +31,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/btnTest"
-        android:layout_toStartOf="@+id/checkBox"
         android:onClick="btnEnviar"
-        android:text="@string/botonEnviar"/>
-
-    <EditText
-        android:id="@+id/editNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/vibrar"
-        android:ems="10"
-        android:hint="Números"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Texto"
-        android:inputType="textPersonName"
-        android:layout_below="@+id/iconCor"
+        android:text="@string/botonEnviar"
         android:layout_alignParentEnd="true" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/checkBox"
-        android:layout_alignBottom="@+id/vibrar"
-        android:layout_centerHorizontal="true" />
+
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/llamar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/btnTest"
-        android:layout_toEndOf="@+id/checkBox"
-        android:onClick="btnEnvCro"
-        android:text="@string/btnCro" />
-
-    <Button
-        android:id="@+id/btnIcnMens"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/buttonEn"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/buttonEn"
-        android:text="@string/btnMens"
-        android:onClick="btnIcnMens"/>
-
-    <Button
-        android:id="@+id/btnLlamar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/button"
-        android:layout_alignStart="@+id/button"
         android:text="@string/btnLlamar"
-        android:onClick="btnLlamar"/>
-
-    <Button
-        android:id="@+id/vibrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:onClick="llamar"
+        android:layout_below="@+id/buttonEn"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/btnIcnMens"
-        android:text="@string/btnVibrar"
-        android:onClick="vibrar"
-        android:layout_alignEnd="@+id/btnIcnMens" />
-
-    <Button
-        android:id="@+id/iconCor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/btnLlamar"
-        android:layout_below="@+id/btnLlamar"
-        android:text="@string/btnCorazon"
-        android:onClick="iconCor" />
+        android:layout_alignEnd="@+id/buttonEn" />
 
     <TextView
         android:id="@+id/textView"
@@ -143,5 +77,16 @@
         android:layout_alignParentStart="true"
         android:onClick="btnDescon"
         android:text="@string/btnDescon" />
+
+    <EditText
+        android:id="@+id/texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/llamar"
+        android:ems="10"
+        android:hint="Texto"
+        android:inputType="textPersonName" />
 
 </RelativeLayout>

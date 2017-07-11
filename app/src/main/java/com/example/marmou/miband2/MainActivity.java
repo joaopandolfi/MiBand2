@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        number = (EditText) findViewById(R.id.editNumber);
-        texto = (EditText) findViewById(R.id.editText);
-        check = (CheckBox) findViewById(R.id.checkBox);
+
+        texto = (EditText) findViewById(R.id.texto);
+
         EditText mac=(EditText) findViewById(R.id.txMac);
         MAC=mac.getText().toString();
 
@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
 
 
-
-
-
     public void getTouchNotifications() {
         helper.getNotifications(
                 Consts.UUID_SERVICE_MIBAND_SERVICE,
@@ -94,53 +91,17 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         getTouchNotifications();
     }
     public void btnEnviar(View view)  throws InterruptedException{
+        String value=texto.getText().toString();
 
-
-        if(check.isChecked()){
-            value=texto.getText().toString();
-        }else{
-            value = number.getText().toString();
-        }
-        helper.sendData(value, (byte) 2, Consts.cronoYHearBeat);
+       helper.sendData(value);
     }
-    public void btnEnvCro(View view)  throws InterruptedException{
 
-
-        if(check.isChecked()){
-            value=texto.getText().toString();
-        }else{
-            value = number.getText().toString();
-        }
-        helper.sendData(value, (byte) 1, Consts.cronoYHearBeat);
-    }
-    public void btnIcnMens(View view) throws InterruptedException{
-
-
-        if(check.isChecked()){
-            value=texto.getText().toString();
-        }else{
-            value = number.getText().toString();
-        }
-        helper.sendData(value, (byte) 1, Consts.mensaje);
+    public void llamar (View view){
 
     }
-    public void btnLlamar(View view) throws InterruptedException{
 
 
-        if(check.isChecked()){
-            value=texto.getText().toString();
-        }else{
-            value = number.getText().toString();
-        }
-        helper.sendData(value, (byte) 1, Consts.llamada);
-    }
-    public void vibrar(View view) throws InterruptedException, IOException {
 
-         helper.sendActions(Consts.vibrar);
-    }
-    public void iconCor(View view) throws InterruptedException{
-                helper.sendActions(Consts.icon);
-    }
 
 
 
@@ -175,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
                 @Override
                 public void run() {
 
-                    Toast.makeText(MainActivity.this,"Boton pulsado", Toast.LENGTH_LONG).show();
+
                     try{
                         functionButton();
                     }
@@ -188,19 +149,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         }
     }
 
-    public void functionButton(){
-
-        CheckBox check = (CheckBox) findViewById(R.id.checkBox);
-        if(check.isChecked()){
-            check.setChecked(false);
-        }else{
-            check.setChecked(true);
-        }}
-
-
-
-
-
+    public void functionButton() {
+        Toast.makeText(MainActivity.this,"Boton pulsado", Toast.LENGTH_LONG).show();
+    }
 }
 
 /*

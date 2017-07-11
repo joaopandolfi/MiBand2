@@ -47,11 +47,13 @@ public class Consts {//this is common for all BTLE devices. see http://stackover
     public static final byte[] BYTE_NEW_HEART_RATE_SCAN = {21, 2, 1};
     public static final UUID UUID_DESCRIPTOR_UPDATE_NOTIFICATION = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     //Actions
-    public static final Byte mensaje=1;
+    public static final Byte mensaje=5;
     public static final Byte llamada=2;
     public static final Byte vibrar=3;
     public static final Byte icon=-2;
     public static final Byte cronoYHearBeat=-3;
+    //Nivel de alerta
+    public static final Byte alert1=1;
 
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
     public static String bytesToHex(byte[] bytes) {

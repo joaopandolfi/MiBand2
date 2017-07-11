@@ -159,63 +159,41 @@ public class BLEMiBand2Helper {
 
 
     };
-    /*
-        Método que envia vibración y icono de mensaje con corazon en el medio
-     */
-    public void sendActions(Byte action){
-        if (!isConnectedToGatt){
-            connect();
-        }
-        try {
-             characteristic.setValue(new byte[]{action,1});//vibrar o icono mensaje con corazon
 
-            myGatBand.writeCharacteristic(characteristic);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+
     /*
         Método para enviar datos tanto numeros como maximo una letra, pero la lectura siempre es en forma de números
     */
-    public void sendData(String value, Byte func, Byte action) {
+    public void sendData(String value) {
         if (!isConnectedToGatt) {
             connect();
         }
         try {
-              /*  if(isNumeric(value)==true){
+            byte alert=Consts.alert1;
+            byte sms=Consts.mensaje;
 
-                    int mens=Integer.parseInt(value);
+            byte [] param=new byte[]{sms,alert};
+            byte[] bytes = value.getBytes(StandardCharsets.US_ASCII);
 
-                            /*Forma original--******
-                            characteristic.setValue(new byte[]{action, func, (byte) (mens & 0xFF), (byte) ((mens >> 8) & 0xFF)});
+            byte[] mensaje= new byte[param.length+bytes.length];
+            System.arraycopy(param,0,mensaje,0,param.length);
+            System.arraycopy(bytes,0,mensaje,param.length,bytes.length);
 
-
-                }else{
-
-                    byte[] actions={action,func};
-                    byte[] mens =value.getBytes(Charset.forName("UTF-8"));
-                    byte[] cero={0};
-                    byte[] union=new byte[actions.length+mens.length+cero.length];
-
-                    //copy actions into start of union
-                    System.arraycopy(actions,0,union,0,actions.length);
-                    System.arraycopy(mens,0,union,actions.length,mens.length);
-                    //copy cero into end of union
-                    System.arraycopy(cero,0,union,mens.length+actions.length,cero.length);
-
-                    characteristic.setValue(union);
-                }*/
-
-            characteristic.setValue(new byte[]{5,1,84,101,115,116});
+            characteristic.setValue(mensaje);
             myGatBand.writeCharacteristic(characteristic);
-            myGatBand.setCharacteristicNotification(characteristic,true);
-
-            /* characteristic.setValue(new byte[]{-3,func, mens, 0 });
-            characteristic.setValue(value.getBytes(Charset.defaultCharset().forName("Utf-8"))); Esto envia pero no muestra nada en la pulsera
-           Esto envia bytes tanto con numeros o letras pero la pulsera no muestra nada.
-            writeData(Consts.UUID_SERVICE_MIBAND_SERVICE,Consts.UUID_CHARACTERISTIC_2A06,value.getBytes(Charset.defaultCharset().forName("Utf-8")));*/
 
 
+
+
+
+
+
+
+            /********
+             * EJEMPLO: ESTO ENVIA LA PALABRA TEST CON EL ICONO DE SMS SIEMPRE QUE EL SERVICIO SEA 1811 Y LA CARACTERISRICA 2a46.
+             * characteristic.setValue(new byte[]{5,1,84,101,115,116});
+             * myGatBand.writeCharacteristic(characteristic);
+             *********/
 
 
         } catch (Exception e) {
