@@ -185,10 +185,6 @@ public class BLEMiBand2Helper {
 
 
 
-
-
-
-
             /********
              * EJEMPLO: ESTO ENVIA LA PALABRA TEST CON EL ICONO DE SMS SIEMPRE QUE EL SERVICIO SEA 1811 Y LA CARACTERISRICA 2a46.
              * characteristic.setValue(new byte[]{5,1,84,101,115,116});
