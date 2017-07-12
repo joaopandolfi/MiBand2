@@ -48,10 +48,13 @@ public class Consts {//this is common for all BTLE devices. see http://stackover
     public static final UUID UUID_DESCRIPTOR_UPDATE_NOTIFICATION = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     //Actions
     public static final Byte mensaje=5;
-    public static final Byte llamada=2;
+    public static final Byte llamada=3;
+
+    /*
+    * Usando otra característica y servicio
     public static final Byte vibrar=3;
     public static final Byte icon=-2;
-    public static final Byte cronoYHearBeat=-3;
+    public static final Byte cronoYHearBeat=-3;*/
     //Nivel de alerta
     public static final Byte alert1=1;
 

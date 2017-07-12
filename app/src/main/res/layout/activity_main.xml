@@ -85,7 +85,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/llamar"
-        android:ems="10"
         android:hint="Texto"
         android:inputType="textPersonName" />
 

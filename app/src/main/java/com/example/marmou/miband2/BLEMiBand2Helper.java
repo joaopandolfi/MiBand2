@@ -9,14 +9,9 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.os.Handler;
 import android.util.Log;
-import android.widget.EditText;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +32,16 @@ public class BLEMiBand2Helper {
     private boolean isConnectedToGatt = false; // the gatt connection
     private BluetoothGatt myGatBand = null;
     private BluetoothGattCharacteristic characteristic;
+    private BluetoothGattCharacteristic characteristicAlerta;
+
+    byte notif;
+    byte alert;
+    String segundoSms;
+    String tercerSms;
+    byte[] mensaje;
+    byte [] parametros;
+    byte[] bytes;
+    public static int CONTADOR=0;
 
 
     private BLEMiBand2Helper() {
@@ -62,7 +67,7 @@ public class BLEMiBand2Helper {
 
         final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         try {
-            //"D4:4E:7D:8E:26:28"
+
             activeDevice = mBluetoothAdapter.getRemoteDevice(MainActivity.MAC);
         } catch (Exception e) {
             activeDevice = null;
@@ -110,6 +115,8 @@ public class BLEMiBand2Helper {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 //Servicio y caracteristica necessaria para el enviio de texto
                 characteristic = gatt.getService(Consts.UUID_SERVICE_1811).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A46);
+                //servicio para alertar de la notificación
+                characteristicAlerta=gatt.getService(Consts.UUID_SERVICE_1802).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A06);
 
                 isConnectedToGatt = true;
             }
@@ -160,34 +167,79 @@ public class BLEMiBand2Helper {
 
     };
 
-
-    /*
-        Método para enviar datos tanto numeros como maximo una letra, pero la lectura siempre es en forma de números
-    */
-    public void sendData(String value) {
+    /**
+     * Envia texto como llamada
+     * @param value mensaje
+     */
+    public void sendCall(String value){
         if (!isConnectedToGatt) {
             connect();
         }
         try {
+            byte notif=Consts.llamada;
             byte alert=Consts.alert1;
-            byte sms=Consts.mensaje;
 
-            byte [] param=new byte[]{sms,alert};
+
+            byte [] parametros=new byte[]{notif,alert};
             byte[] bytes = value.getBytes(StandardCharsets.US_ASCII);
 
-            byte[] mensaje= new byte[param.length+bytes.length];
-            System.arraycopy(param,0,mensaje,0,param.length);
-            System.arraycopy(bytes,0,mensaje,param.length,bytes.length);
+            byte[] mensaje= unirBytes(parametros,bytes);
 
             characteristic.setValue(mensaje);
             myGatBand.writeCharacteristic(characteristic);
 
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     *  Envía texto a la miBand desde la aplicación
+     * @param value mensaje para enviar a la miBand
+     */
+    public void sendSms(String value) {
+        if (!isConnectedToGatt) {
+            connect();
+        }
+        try {
+            notif=Consts.mensaje;
+            alert=Consts.alert1;
+
+
+                alerta();
+                java.lang.Thread.sleep(3000);
+
+            if(value.length() > 18){
+
+               String primersms=value.substring(0,15);
+               primersms=primersms+"...";
+
+
+                parametros=new byte[]{notif,alert};
+                bytes = primersms.getBytes(StandardCharsets.US_ASCII);
+                mensaje= unirBytes(parametros,bytes);
+
+
+                characteristic.setValue(mensaje);
+                myGatBand.writeCharacteristic(characteristic);
+
+            }else{
+                 parametros=new byte[]{notif,alert};
+                 bytes = value.getBytes(StandardCharsets.US_ASCII);
+                 mensaje= unirBytes(parametros,bytes);
+
+                characteristic.setValue(mensaje);
+                myGatBand.writeCharacteristic(characteristic);
+            }
+
 
             /********
              * EJEMPLO: ESTO ENVIA LA PALABRA TEST CON EL ICONO DE SMS SIEMPRE QUE EL SERVICIO SEA 1811 Y LA CARACTERISRICA 2a46.
              * characteristic.setValue(new byte[]{5,1,84,101,115,116});
+             *                                        T   e   s   t
              * myGatBand.writeCharacteristic(characteristic);
              *********/
 
@@ -207,7 +259,11 @@ public class BLEMiBand2Helper {
         void onWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status);
 
         void onNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic);
+
+
     }
+
+
 
     /* =========  Handling Events  ============== */
 
@@ -381,8 +437,19 @@ public class BLEMiBand2Helper {
     public static byte[] toUtf8s(String message) {
         return message.getBytes(StandardCharsets.UTF_8);
     }
+    public void alerta(){
+        characteristicAlerta.setValue(new byte []{1,1});
+        myGatBand.writeCharacteristic(characteristicAlerta);
+    }
 
+    public byte[] unirBytes(byte[] a,byte[] b){
 
+        byte[] mensaje= new byte[a.length+b.length];
+        System.arraycopy(a,0,mensaje,0,a.length);
+        System.arraycopy(b,0,mensaje,a.length,b.length);
+
+        return mensaje;
+    }
 
 
 
