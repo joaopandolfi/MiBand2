@@ -1,6 +1,6 @@
 Welcome to the MiBand2 wiki!
 
-Esta App hace una detención del Botón y envío de texto y números máximo 16 caractéres a la mi Band 2.
+Esta App hace una detención del Botón y envío de texto y números máximo 18 caractéres a la mi Band 2.
 
 Gracias a:
 https://github.com/lwis/miband-notifier/
