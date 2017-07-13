@@ -79,13 +79,27 @@
         android:text="@string/btnDescon" />
 
     <EditText
-        android:id="@+id/texto"
+        android:id="@+id/textoLlamada"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/llamar"
-        android:hint="Texto"
-        android:inputType="textPersonName" />
+        android:hint="Mensaje por llamada"
+        android:inputType="textPersonName"
+        android:maxLength="18" />
+
+    <EditText
+        android:id="@+id/mensaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnDescon"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textoLlamada"
+        android:ems="10"
+        android:hint="Mensaje por sms"
+        android:inputType="textMultiLine"
+        android:maxLength="45" />
 
 </RelativeLayout>
