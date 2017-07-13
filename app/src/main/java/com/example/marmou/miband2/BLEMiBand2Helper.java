@@ -58,7 +58,9 @@ public class BLEMiBand2Helper {
 
     /* =========  Handling Initializing  ============== */
 
-
+    /**
+     * Se conecta con la miBand por bluetoothLowWEnergy
+     */
     public void connect() {
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             return;
@@ -81,6 +83,10 @@ public class BLEMiBand2Helper {
         }
     }
 
+    /**
+     * se conecta con la pulsera
+     * @return el método connect
+     */
     public boolean connectGatt() {
         if (activeDevice == null)
             return false;
@@ -94,7 +100,9 @@ public class BLEMiBand2Helper {
         return myGatBand.connect();
     }
 
-
+    /**
+     * Desconexión de la MiBand
+     */
     public void DisconnectGatt() {
         if (myGatBand != null && isConnectedToGatt) {
             myHandler.post(new Runnable() {
@@ -221,6 +229,8 @@ public class BLEMiBand2Helper {
              * EJEMPLO: ESTO ENVIA LA PALABRA TEST CON EL ICONO DE SMS SIEMPRE QUE EL SERVICIO SEA 1811 Y LA CARACTERISRICA 2a46.
              * characteristic.setValue(new byte[]{5,1,84,101,115,116});
              *                                        T   e   s   t
+             *                                        5=icono de sms
+             *                                        1=nivel de alerta
              * myGatBand.writeCharacteristic(characteristic);
              *********/
 
@@ -401,28 +411,23 @@ public class BLEMiBand2Helper {
         }
     }
 
-    private static boolean isNumeric(String cadena){
-        try {
-            Integer.parseInt(cadena);
-            return true;
-        } catch (NumberFormatException nfe){
-            return false;
-        }
-    }
 
-    public static byte fromUint8(int value) {
-        return (byte) (value & 0xff);
 
-    }
+    /**
+     * Alerta en forma de icono de sms para avisar de que va a llegar un sms
+     */
 
-    public static byte[] toUtf8s(String message) {
-        return message.getBytes(StandardCharsets.UTF_8);
-    }
     public void alerta(){
         characteristicAlerta.setValue(new byte []{1,1});
         myGatBand.writeCharacteristic(characteristicAlerta);
     }
 
+    /**
+     * une los bytes estaticos con los del sms
+     * @param a categoria y notificacion
+     * @param b mensaje
+     * @return
+     */
     public byte[] unirBytes(byte[] a,byte[] b){
 
         byte[] mensaje= new byte[a.length+b.length];

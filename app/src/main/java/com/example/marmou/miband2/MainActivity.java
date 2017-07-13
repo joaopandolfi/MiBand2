@@ -76,26 +76,34 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     }
 
 
-
+    /**
+     * Botón para conectar con miBAnd2
+     * @param view
+     */
     public void btnRun(View view) {
         EditText mac=(EditText) findViewById(R.id.txMac);
         MAC=mac.getText().toString();
         helper.connect();
 
     }
+    //Botón para conectar con miBAnd2
     public void btnDescon(View view){
         helper.DisconnectGatt();
     }
 
 
-
+    /**
+     * Recibir notificactiones del botón
+     */
     public void getTouchNotifications() {
         helper.getNotifications(
                 Consts.UUID_SERVICE_MIBAND_SERVICE,
                 Consts.UUID_BUTTON_TOUCH);
         Toast.makeText(MainActivity.this, "Botón activado", Toast.LENGTH_SHORT).show();
     }
-
+    /**
+     * Recibir notificactiones del botón
+     */
     public void btnTest(View view) throws InterruptedException {
         getTouchNotifications();
     }
@@ -113,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
         enviarTexto();
     }
+
+    /**
+     * enviar texto en forma de sms aplicando los split y separando el mensaje en 15 caracteres
+     * @throws InterruptedException
+     */
     public void enviarTexto() throws InterruptedException {
 
         String value=textoMensaje.getText().toString();
