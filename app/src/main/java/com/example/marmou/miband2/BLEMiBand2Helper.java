@@ -41,7 +41,7 @@ public class BLEMiBand2Helper {
     byte[] mensaje;
     byte [] parametros;
     byte[] bytes;
-    public static int CONTADOR=0;
+
 
 
     private BLEMiBand2Helper() {
@@ -208,32 +208,13 @@ public class BLEMiBand2Helper {
             notif=Consts.mensaje;
             alert=Consts.alert1;
 
+            parametros=new byte[]{notif,alert};
+            bytes = value.getBytes(StandardCharsets.US_ASCII);
+            mensaje= unirBytes(parametros,bytes);
 
-                alerta();
-                java.lang.Thread.sleep(3000);
+            characteristic.setValue(mensaje);
+            myGatBand.writeCharacteristic(characteristic);
 
-            if(value.length() > 18){
-
-               String primersms=value.substring(0,15);
-               primersms=primersms+"...";
-
-
-                parametros=new byte[]{notif,alert};
-                bytes = primersms.getBytes(StandardCharsets.US_ASCII);
-                mensaje= unirBytes(parametros,bytes);
-
-
-                characteristic.setValue(mensaje);
-                myGatBand.writeCharacteristic(characteristic);
-
-            }else{
-                 parametros=new byte[]{notif,alert};
-                 bytes = value.getBytes(StandardCharsets.US_ASCII);
-                 mensaje= unirBytes(parametros,bytes);
-
-                characteristic.setValue(mensaje);
-                myGatBand.writeCharacteristic(characteristic);
-            }
 
 
             /********
@@ -454,5 +435,3 @@ public class BLEMiBand2Helper {
 
 
 }
-
-
