@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
@@ -59,7 +58,7 @@ public class BLEMiBand2Helper {
     /* =========  Handling Initializing  ============== */
 
     /**
-     * Se conecta con la miBand por bluetoothLowWEnergy
+     * Connect to MiBand2
      */
     public void connect() {
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
@@ -84,8 +83,8 @@ public class BLEMiBand2Helper {
     }
 
     /**
-     * se conecta con la pulsera
-     * @return el método connect
+     * connect to service of the miBand
+     * @return method connect
      */
     public boolean connectGatt() {
         if (activeDevice == null)
@@ -101,7 +100,7 @@ public class BLEMiBand2Helper {
     }
 
     /**
-     * Desconexión de la MiBand
+     * Disconnect to Miband2
      */
     public void DisconnectGatt() {
         if (myGatBand != null && isConnectedToGatt) {
@@ -117,6 +116,9 @@ public class BLEMiBand2Helper {
         }
     }
 
+    /**
+     * Comunication with miBand
+     */
     private BluetoothGattCallback myGattCallback = new BluetoothGattCallback() {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -176,8 +178,8 @@ public class BLEMiBand2Helper {
     };
 
     /**
-     * Envia texto como llamada
-     * @param value mensaje
+     * Send text as call to miBand
+     * @param value messaje for miBand
      */
     public void sendCall(String value){
         if (!isConnectedToGatt) {
@@ -191,7 +193,7 @@ public class BLEMiBand2Helper {
             byte [] parametros=new byte[]{notif,alert};
             byte[] bytes = value.getBytes(StandardCharsets.US_ASCII);
 
-            byte[] mensaje= unirBytes(parametros,bytes);
+            byte[] mensaje= unitBytes(parametros,bytes);
 
             characteristic.setValue(mensaje);
             myGatBand.writeCharacteristic(characteristic);
@@ -205,8 +207,8 @@ public class BLEMiBand2Helper {
 
 
     /**
-     *  Envía texto a la miBand desde la aplicación
-     * @param value mensaje para enviar a la miBand
+     * Send text to miBand2 as sms
+     * @param value messaje for miBand
      */
     public void sendSms(String value) {
         if (!isConnectedToGatt) {
@@ -218,7 +220,7 @@ public class BLEMiBand2Helper {
 
             parametros=new byte[]{notif,alert};
             bytes = value.getBytes(StandardCharsets.US_ASCII);
-            mensaje= unirBytes(parametros,bytes);
+            mensaje= unitBytes(parametros,bytes);
 
             characteristic.setValue(mensaje);
             myGatBand.writeCharacteristic(characteristic);
@@ -348,6 +350,11 @@ public class BLEMiBand2Helper {
         }
     }
 
+    /**
+     * Notifications from mi Band
+     * @param service of the miBand
+     * @param Characteristics of the miBand
+     */
     public void getNotifications(UUID service, UUID Characteristics) {
         if (!isConnectedToGatt || myGatBand == null) {
             Log.d(TAG, "Cant get notifications from BLE, not initialized.");
@@ -414,7 +421,7 @@ public class BLEMiBand2Helper {
 
 
     /**
-     * Alerta en forma de icono de sms para avisar de que va a llegar un sms
+     * alert in form of icon sms
      */
 
     public void alerta(){
@@ -423,12 +430,12 @@ public class BLEMiBand2Helper {
     }
 
     /**
-     * une los bytes estaticos con los del sms
-     * @param a categoria y notificacion
-     * @param b mensaje
+     * Links static bytes to sms
+     * @param a cathegory and notification
+     * @param b menssaje
      * @return
      */
-    public byte[] unirBytes(byte[] a,byte[] b){
+    public byte[] unitBytes(byte[] a, byte[] b){
 
         byte[] mensaje= new byte[a.length+b.length];
         System.arraycopy(a,0,mensaje,0,a.length);

@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnLlamar"
-        android:onClick="llamar"
+        android:onClick="call"
         android:layout_below="@+id/buttonEn"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/buttonEn" />

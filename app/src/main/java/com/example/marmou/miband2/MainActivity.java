@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     public static final String LOG_TAG = "Mario";
 
-    public EditText textoLlamada;
-    public EditText textoMensaje;
+    public EditText textCall;
+    public EditText textSms;
     public String part1="";
     public String part2="";
     public String part3="";
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textoLlamada = (EditText) findViewById(R.id.textoLlamada);
-        textoMensaje = (EditText) findViewById(R.id.mensaje);
+        textCall = (EditText) findViewById(R.id.textoLlamada);
+        textSms = (EditText) findViewById(R.id.mensaje);
 
 
         EditText mac=(EditText) findViewById(R.id.txMac);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
 
     /**
-     * Botón para conectar con miBAnd2
+     * //button for Connect to miBand
      * @param view
      */
     public void btnRun(View view) {
@@ -86,14 +86,16 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         helper.connect();
 
     }
-    //Botón para conectar con miBAnd2
-    public void btnDescon(View view){
+    /**
+     * button for Disconnect to miBand
+     */
+     public void btnDescon(View view){
         helper.DisconnectGatt();
     }
 
 
     /**
-     * Recibir notificactiones del botón
+     * Get notifications of the button
      */
     public void getTouchNotifications() {
         helper.getNotifications(
@@ -102,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         Toast.makeText(MainActivity.this, "Botón activado", Toast.LENGTH_SHORT).show();
     }
     /**
-     * Recibir notificactiones del botón
+     * button to collect notifications of the button
      */
     public void btnTest(View view) throws InterruptedException {
         getTouchNotifications();
     }
 
     /**
-     * Enviar texto como sms
+     * function btnEnviar, Send text as sms
      * @param view
      */
     public void btnEnviar(View view) throws InterruptedException {
@@ -119,20 +121,20 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         Y AL TOCAR EL BOTON QUE SE MANDE EL SMS
          */
 
-        enviarTexto();
+        sendText();
     }
 
     /**
-     * enviar texto en forma de sms aplicando los split y separando el mensaje en 15 caracteres
+     * Send text as sms, separating the message in 15 characters
      * @throws InterruptedException
      */
-    public void enviarTexto() throws InterruptedException {
+    public void sendText() throws InterruptedException {
 
-        String value=textoMensaje.getText().toString();
+        String value= textSms.getText().toString();
         helper.alerta();
         java.lang.Thread.sleep(2000);
 
-        añadirSplit(value);
+        aadSplit(value);
 
         helper.sendSms(part1);
         part1="";
@@ -144,19 +146,17 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     }
 
-
-
     /**
-     * Enviar texto como llamada
+     * Send text as call
      * @param view
      */
-    public void llamar (View view){
-        String value=textoLlamada.getText().toString();
+    public void call(View view){
+        String value= textCall.getText().toString();
         if(value.length()>18){
-            String cortado=value.substring(0,18);
-            helper.sendCall(cortado);
+            String cut=value.substring(0,18);
+            helper.sendCall(cut);
             Toast.makeText(MainActivity.this, "No se puede enviar el texto entero en forma de llamada,\n" +
-                    "pruebe a hacerlo en forma de sms. Se ha enviado: "+cortado, Toast.LENGTH_LONG).show();
+                    "pruebe a hacerlo en forma de sms. Se ha enviado: "+cut, Toast.LENGTH_LONG).show();
         }
         else{
             helper.sendCall(value);
@@ -186,16 +186,18 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     }
 
+    /**
+     * Notification from miBand, in this case from the button
+     * @param gatt
+     * @param characteristic
+     */
     @Override
     public void onNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         UUID alertUUID = characteristic.getUuid();
         if (alertUUID.equals(Consts.UUID_BUTTON_TOUCH)) {
             handler.post(new Runnable() {
-
                 @Override
                 public void run() {
-
-
                     try{
                         functionButton();
                     }
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     }
 
     /**
-     * Funcionalidad que se le dará al botón
+     * Function of the Button from miBand2
      *
      */
     public void functionButton() {
@@ -223,9 +225,11 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     }
 
     /**
-     * Metodo para recibir las siguinetes partes del sms y decir okay recibido
+     *
+     *Method to receive the following parts of the sms and say: "okay received"
+     *send more than one sms
      */
-    public void enviarPartSms(){
+    private void enviarPartSms(){
         switch (POS){
             case 1:
                 Toast.makeText(MainActivity.this, "Ok, Recibida primera parte", Toast.LENGTH_LONG).show();
@@ -248,59 +252,56 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     }
 
     /**
-     * Sele añade "_" cada 15 caracteres para poder utilizar split para separar el sms y se le añade -> cuando hay más partes del sms por leer
-     * NOTA: LA XIAOMI MIBAND2 SOLO ADMITE 18 CARACTERES POR CADA MENSAJE
-     * @param mensaje sms que queremos mandar
+     * It is added "_" every 15 characters to be able to use split to separate the sms and it is added -> when there are more parts of the sms to read
+     *  NOTE: THE XIAOMI MIBAND2 ONLY ALLOWS 18 CHARACTERS FOR EVERY MESSAGE
+     * @param messaje sms
      */
-    public void añadirSplit(String mensaje){
+    private void aadSplit(String messaje){
 
-        String textofin="";
-        ArrayList<String> letras=  new ArrayList<>();
+        String textfin="";
+        ArrayList<String> letters=  new ArrayList<>();
 
-        for (int i=0;i<=mensaje.length();i++){
+        for (int i=0;i<=messaje.length();i++){
             try {
-                letras.add(String.valueOf(mensaje.charAt(i)));
+                letters.add(String.valueOf(messaje.charAt(i)));
             }catch (Exception e){
                 System.out.println("Salta exception pero lo almacena bien");
-
             }
         }
-
-        for (int i=0;i<letras.size();i++) {
+//limited for 45 characteres
+        for (int i=0;i<letters.size();i++) {
             if(i==15){
-                letras.add(i,"->");
-                letras.add(i+1,"_");
+                letters.add(i,"->");
+                letters.add(i+1,"_");
             }else if(i==30){
-                letras.add(i,"->");
-                letras.add(i+1,"_");
+                letters.add(i,"->");
+                letters.add(i+1,"_");
             }/*else if(i==45){
-                letras.add(i,"->");
-                letras.add(i+1,"_");
+                letters.add(i,"->");
+                letters.add(i+1,"_");
             }else if(i==60){
-                letras.add(i,"->");
-                letras.add(i+1,"_");
+                letters.add(i,"->");
+                letters.add(i+1,"_");
             }else if(i==75){
-                letras.add(i,"->");
-                letras.add(i+1,"_");
+                letters.add(i,"->");
+                letters.add(i+1,"_");
             }*/
         }
 
-        for (String s : letras) {
-            textofin+=s;
+        for (String s : letters) {
+            textfin+=s;
         }
 
-        fragmentarSms(textofin);
-
-
+        fragmentarSms(textfin);
 
     }
 
     /**
-     * Metodo que fragmeta el sms en varios String para enviarlos por separado
-     * @param textofin Texto final con los splits añadidos
+     * fragment the sms in parts to send them separately
+     * @param textfin final text with the splits
      */
-    public void fragmentarSms(String textofin){
-        String[] parts = textofin.split("_");
+    private void fragmentarSms(String textfin){
+        String[] parts = textfin.split("_");
         try{
             part1 = parts[0];
             part2 = parts[1];
