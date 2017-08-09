@@ -223,6 +223,8 @@ public class BLEMiBand2Helper {
             bytes = value.getBytes(StandardCharsets.US_ASCII);
             mensaje= unitBytes(parametros,bytes);
 
+            Log.v("TESTE",new String(bytes));
+
             characteristic.setValue(mensaje);
             myGatBand.writeCharacteristic(characteristic);
 

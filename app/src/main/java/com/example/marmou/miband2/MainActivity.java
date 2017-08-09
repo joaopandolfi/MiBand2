@@ -25,14 +25,15 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     public EditText textCall;
     public EditText textSms;
-    public String part1="";
+    /*public String part1="";
     public String part2="";
     public String part3="";
-   /* public String part4="";
+    public String part4="";
     public String part5="";
     public String part6="";
-    public String part7="";*/
-
+    public String part7="";
+    */
+    public ArrayList<String> parts;
     public static String MAC;
 
     static int POS=0;
@@ -137,13 +138,10 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
         aadSplit(value);
 
-        helper.sendSms(part1);
-        part1="";
-        if(part2.isEmpty()){
-            POS=0;
-        }else{
-            POS=1;
-        }
+        POS = 0;
+
+        helper.sendSms(parts.get(POS));
+        POS++;
 
     }
 
@@ -234,7 +232,14 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      *send more than one sms
      */
     private void enviarPartSms(){
-        switch (POS){
+        Toast.makeText(MainActivity.this, String.format("Ok, Recebida a %d parte",POS), Toast.LENGTH_LONG).show();
+        if(parts.size() > POS && POS != 0) {
+            helper.sendSms(parts.get(POS));
+            POS++;
+        }
+        else
+            POS = 0;
+       /* switch (POS){
             case 1:
                 Toast.makeText(MainActivity.this, "Ok, Recebida primera parte", Toast.LENGTH_LONG).show();
                 helper.sendSms(part2);
@@ -252,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
                 POS=0;
                 break;
 
-        }
+        }*/
     }
 
     /**
@@ -280,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
             }else if(i==30){
                 letters.add(i,"->");
                 letters.add(i+1,"_");
-            }/*else if(i==45){
+            }else if(i==45){
                 letters.add(i,"->");
                 letters.add(i+1,"_");
             }else if(i==60){
@@ -289,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
             }else if(i==75){
                 letters.add(i,"->");
                 letters.add(i+1,"_");
-            }*/
+            }
         }
 
         for (String s : letters) {
@@ -305,16 +310,20 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      * @param textfin final text with the splits
      */
     private void fragmentarSms(String textfin){
-        String[] parts = textfin.split("_");
+        String[] splitted = textfin.split("_");
         try{
-            part1 = parts[0];
+            this.parts = new ArrayList<String>();
+            for(int i =0 ; i < splitted.length; i++){
+                this.parts.add(splitted[i]);
+            }
+           /* part1 = parts[0];
             part2 = parts[1];
             part3 = parts[2];
-            /*part4 = parts[3];
+            part4 = parts[3];
             part5 = parts[4];
             part6 = parts[5];
-            part7 = parts[6];*/
-
+            part7 = parts[6];
+            */
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

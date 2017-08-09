@@ -51,10 +51,10 @@ public class Consts {//this is common for all BTLE devices. see http://stackover
     public static final Byte llamada=3;
 
     /*
-    * Usando otra característica y servicio*/
+    * Usando otra característica y servicio
     public static final Byte vibrar=3;
     public static final Byte icon=-2;
-    public static final Byte cronoYHearBeat=-3;
+    public static final Byte cronoYHearBeat=-3;*/
     //Nivel de alerta
     public static final Byte alert1=1;
 
