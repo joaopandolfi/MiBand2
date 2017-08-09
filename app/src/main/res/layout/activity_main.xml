@@ -66,7 +66,7 @@
         android:layout_toEndOf="@+id/textView"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="E4:15:E7:02:7F:12" />
+        android:text="C4:E4:56:07:F1:9F" />
 
     <Button
         android:id="@+id/btnDescon"
@@ -85,7 +85,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/llamar"
-        android:hint="Mensaje por llamada"
+        android:hint="Mensagem por chamada"
         android:inputType="textPersonName"
         android:maxLength="18" />
 
@@ -98,7 +98,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textoLlamada"
         android:ems="10"
-        android:hint="Mensaje por sms"
+        android:hint="Mensagem por sms"
         android:inputType="textMultiLine"
         android:maxLength="45" />
 

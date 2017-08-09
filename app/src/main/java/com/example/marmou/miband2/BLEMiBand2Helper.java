@@ -123,6 +123,7 @@ public class BLEMiBand2Helper {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.v("TESTE","PEGOU A CARACTERISTICA");
                 //Servicio y caracteristica necessaria para el enviio de texto
                 characteristic = gatt.getService(Consts.UUID_SERVICE_1811).getCharacteristic(Consts.UUID_CHARACTERISTIC_2A46);
                 //servicio para alertar de la notificación

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.EditText;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
         helper.getNotifications(
                 Consts.UUID_SERVICE_MIBAND_SERVICE,
                 Consts.UUID_BUTTON_TOUCH);
-        Toast.makeText(MainActivity.this, "Botón activado", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Botao ativado", Toast.LENGTH_SHORT).show();
     }
     /**
      * button to collect notifications of the button
@@ -151,14 +152,17 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      * @param view
      */
     public void call(View view){
+        Log.v(LOG_TAG,"SACI");
         String value= textCall.getText().toString();
         if(value.length()>18){
             String cut=value.substring(0,18);
+            Log.v(LOG_TAG,cut);
             helper.sendCall(cut);
             Toast.makeText(MainActivity.this, "No se puede enviar el texto entero en forma de llamada,\n" +
                     "pruebe a hacerlo en forma de sms. Se ha enviado: "+cut, Toast.LENGTH_LONG).show();
         }
         else{
+            Log.v(LOG_TAG,value);
             helper.sendCall(value);
         }
     }
@@ -173,12 +177,12 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     @Override
     public void onConnect() {
-
+        Log.v(LOG_TAG,"CONNECTED");
     }
 
     @Override
     public void onRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-
+        Log.v(LOG_TAG,"DISCONNECTED");
     }
 
     @Override
@@ -216,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      */
     public void functionButton() {
         if(POS==0){
-            Toast.makeText(MainActivity.this, "Ok, Recibido todo el mensaje", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Ok, Mensagem toda recebida", Toast.LENGTH_LONG).show();
         }
 
         enviarPartSms();
@@ -232,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
     private void enviarPartSms(){
         switch (POS){
             case 1:
-                Toast.makeText(MainActivity.this, "Ok, Recibida primera parte", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Ok, Recebida primera parte", Toast.LENGTH_LONG).show();
                 helper.sendSms(part2);
                 part2="";
                 POS=2;
@@ -242,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
                 break;
 
             case 2:
-                Toast.makeText(MainActivity.this, "Ok, Recibida segunda parte", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Ok, Recebida segunda parte", Toast.LENGTH_LONG).show();
                 helper.sendSms(part3);
                 part3="";
                 POS=0;
