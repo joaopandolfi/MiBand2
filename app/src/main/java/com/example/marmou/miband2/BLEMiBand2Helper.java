@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class BLEMiBand2Helper {
 
-    public static final String TAG = "Mario-MI-2";
+    public static final String TAG = "MI-2";
 
     private Context myContext = null;
     private android.os.Handler myHandler = null;

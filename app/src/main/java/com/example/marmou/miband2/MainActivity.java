@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.example.marmou.miband2.apl.AplKeyCommand;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -21,18 +23,10 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.BLEAction{
 
-    public static final String LOG_TAG = "Mario";
+    public static final String LOG_TAG = "Batman";
 
     public EditText textCall;
     public EditText textSms;
-    /*public String part1="";
-    public String part2="";
-    public String part3="";
-    public String part4="";
-    public String part5="";
-    public String part6="";
-    public String part7="";
-    */
     public ArrayList<String> parts;
     public static String MAC;
 
@@ -69,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
 
     }
 
+
+    protected void permissions(){
+
+    }
 
     @Override
     protected void onDestroy() {
@@ -201,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
                 @Override
                 public void run() {
                     try{
+                        Log.v("Test","BOTAO CLICADO");
+                        AplKeyCommand.takePhoto();
+                        //Camera.dispatchTakePictureIntent(MainActivity.this);
                         functionButton();
                     }
                     catch (Exception e){
@@ -218,12 +219,9 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      */
     public void functionButton() {
         if(POS==0){
-            Toast.makeText(MainActivity.this, "Ok, Mensagem toda recebida", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this, "Ok, Mensagem toda recebida", Toast.LENGTH_LONG).show();
         }
-
         enviarPartSms();
-
-
     }
 
     /**
@@ -233,31 +231,12 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
      */
     private void enviarPartSms(){
         Toast.makeText(MainActivity.this, String.format("Ok, Recebida a %d parte",POS), Toast.LENGTH_LONG).show();
-        if(parts.size() > POS && POS != 0) {
+        if( parts != null && parts.size() > POS && POS != 0) {
             helper.sendSms(parts.get(POS));
             POS++;
         }
         else
             POS = 0;
-       /* switch (POS){
-            case 1:
-                Toast.makeText(MainActivity.this, "Ok, Recebida primera parte", Toast.LENGTH_LONG).show();
-                helper.sendSms(part2);
-                part2="";
-                POS=2;
-                if(part3.isEmpty()){
-                    POS=0;
-                }
-                break;
-
-            case 2:
-                Toast.makeText(MainActivity.this, "Ok, Recebida segunda parte", Toast.LENGTH_LONG).show();
-                helper.sendSms(part3);
-                part3="";
-                POS=0;
-                break;
-
-        }*/
     }
 
     /**
@@ -316,14 +295,6 @@ public class MainActivity extends AppCompatActivity implements BLEMiBand2Helper.
             for(int i =0 ; i < splitted.length; i++){
                 this.parts.add(splitted[i]);
             }
-           /* part1 = parts[0];
-            part2 = parts[1];
-            part3 = parts[2];
-            part4 = parts[3];
-            part5 = parts[4];
-            part6 = parts[5];
-            part7 = parts[6];
-            */
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
